@@ -88,13 +88,92 @@ public function __construct()
 	}
 	
 	private function getListContentNews(){			//retourne les données contenues dans la base concernant les news uniquement
-		$ordre = '';
+		$ordre = ''; $recherche = ''; $conditions = false;
 		if(Tools::isSubmit('ronchhon_module_newsOrderby') && Tools::isSubmit('ronchhon_module_newsOrderway') && substr(Tools::getValue('ronchhon_module_newsOrderby'),0,1) != 'g'){
 			$ordre = ' order by '.Tools::getValue('ronchhon_module_newsOrderby').' '.Tools::getValue('ronchhon_module_newsOrderway');
 		}
-		$retour_total=$this->bdd->query('SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news'.$ordre);
+		if(Tools::isSubmit('submitFilter')){
+			foreach($_POST as $cle=>$value){
+				$rechercheTemp = $this->traitementRecherche($cle, $value);
+				if(!empty($rechercheTemp) && $conditions){
+					$recherche.= " and ".$rechercheTemp;
+				}
+				else if(!empty($rechercheTemp) && !$conditions){
+					$conditions = true;
+					$recherche.= " where ".$rechercheTemp;
+				}
+			}
+		}
+		echo 'SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news'.$recherche.$ordre."</br>";
+		$retour_total=$this->bdd->query('SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news'.$recherche.$ordre);
 		$content=$retour_total->fetchAll();
+		if(count($content) == 0){
+			$retour_total=$this->bdd->query('SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news');
+			$content=$retour_total->fetchAll();
+			$this->displayError("Probleme");
+		}
 		return $content;
+	}
+	
+	private function traitementRecherche($colonne, $valeur){
+		if(preg_match("#^ronchhon_module_newsFilter_n#",$colonne)){
+				if(!empty($_POST[$colonne])){
+					$colValeur = substr($colonne,27);
+					switch($colValeur){
+						case 'news_id':
+							$valCherche = htmlentities($valeur);
+							$valCherche = str_replace('\'','\'\'',$valCherche);
+							$recherche = " ".$colValeur."='".$valCherche."' ";
+							return $recherche;
+							break;
+						case 'news_titre':
+							$valCherche = htmlentities($valeur);
+							$valCherche = str_replace('\'','\'\'',$valCherche);
+							$valCherche = strtoupper($valCherche);
+							$recherche = " ".$colValeur." LIKE '%".$valCherche."%' ";
+							return $recherche;
+							break;
+						case 'news_date_p':
+							$x = false;
+							if(!empty($valeur[0])){
+								$date = explode('-',$valeur[0]);
+								$valCherche = $date[2]."/".$date[1]."/".$date[0];
+								$recherche = " ".$colValeur." > str_to_date('".$valCherche."','%d/%m/%Y')";
+								$x = true;
+							}
+							if(!empty($valeur[1])){
+								if($x){
+									$recherche .= " and ";
+								}
+								$date = explode('-',$valeur[1]);
+								$valCherche = $date[2]."/".$date[1]."/".$date[0];
+								$recherche .= " ".$colValeur." < str_to_date('".$valCherche."','%d/%m/%Y')";
+							}
+							return $recherche;
+							break;
+						case 'news_date_m':
+							$x = false;
+							if(!empty($valeur[0])){
+								$date = explode('-',$valeur[0]);
+								$valCherche = $date[2]."/".$date[1]."/".$date[0];
+								$recherche = " ".$colValeur." > str_to_date('".$valCherche."','%d/%m/%Y')";
+								$x = true;
+							}
+							if(!empty($valeur[1])){
+								if($x){
+									$recherche .= " and ";
+								}
+								$date = explode('-',$valeur[1]);
+								$valCherche = $date[2]."/".$date[1]."/".$date[0];
+								$recherche .= " ".$colValeur." < str_to_date('".$valCherche."','%d/%m/%Y')";
+							}
+							return $recherche;
+							break;
+						default:
+							break;
+					}
+				}
+		}
 	}
 	
 	private function getListContentGenreNews(){			//retourne les données contenues dans la base concernant les genres de news uniquement
@@ -202,6 +281,11 @@ public function __construct()
 	
 	public function getContent(){
 		$output = null;
+		
+		if(Tools::isSubmit('submitReset'.$this->name)){
+			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+		}
+		
 		if (Tools::isSubmit('submit'.$this->name) && Tools::isSubmit('update'.$this->name) && Tools::isSubmit('news_id')){
 			
 			$this->soumissionFormulaireNews('update');
@@ -258,6 +342,9 @@ public function __construct()
 			else{ return $output.$this->displayFormGenreNews();}
 		}
 		else{
+			if(Tools::isSubmit('error')){
+				$output.= $this->displayError($this->l(Tools::getValue('error')));
+			}
 			return $output.$this->initList().$output.$this->listeGenreNews();
 		}
 	}
@@ -280,6 +367,7 @@ public function __construct()
             'title' => 'Contenu',
             'width' => 'auto',
             'type' => 'text',
+			'search' => false,
         ),
 		'news_date_p' => array(
             'title' => 'Date de publication',

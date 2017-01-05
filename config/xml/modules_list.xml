@@ -123,6 +123,7 @@
 		<module name="brainify"/>
 		<module name="chronopost"/>
 		<module name="correos"/>
+		<module name="cubyn"/>
 		<module name="dotpay"/>
 		<module name="dpdfrance"/>
 		<module name="easymarketing"/>
@@ -141,10 +142,11 @@
 		<module name="googleshopping"/>
 		<module name="heidelpay"/>
 		<module name="hipay"/>
+		<module name="iziflux"/>
 		<module name="klarnaofficial"/>
 		<module name="klikandpay"/>
+		<module name="lecabflash"/>
 		<module name="lanavettepickup"/>
-		<module name="liveperson"/>
 		<module name="lowcostexpress"/>
 		<module name="magnalister"/>
 		<module name="mercadopagobr"/>
@@ -154,6 +156,7 @@
 		<module name="nostotagging"/>
 		<module name="nimblepayment"/>
 		<module name="ogone"/>
+		<module name="onehopsmsservice"/>
 		<module name="openpayprestashop"/>
 		<module name="packlink"/>
 		<module name="pagseguro"/>
@@ -171,6 +174,7 @@
 		<module name="realexredirect"/>
 		<module name="reforestaction"/>
 		<module name="selldorado"/>
+		<module name="sendcloud"/>
 		<module name="sendinblue"/>
 		<module name="seur"/>
 		<module name="shoppingfluxexport"/>
@@ -185,8 +189,7 @@
 		<module name="tntcarrier"/>
 		<module name="trustedshops"/>
 		<module name="twenga"/>
-		<module name="twengabid"/>
-		<module name="twengafeed"/>
+		<module name="wirecardceecheckoutseamless"/>
 		<module name="worldpay"/>
 		<module name="wing"/>
 		<module name="yousticeresolutionsystem"/>
