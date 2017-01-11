@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2016-12-01 12:35:43
+<?php /* Smarty version Smarty-3.1.19, created on 2017-01-11 15:57:11
          compiled from "C:\xampp\htdocs\websites\prestashop\modules\ronchhon_module_news\ronchhon_module_news.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:8846580784998aa163-20434525%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '08835c520e822b958e11315a3a90028b75038206' => 
     array (
       0 => 'C:\\xampp\\htdocs\\websites\\prestashop\\modules\\ronchhon_module_news\\ronchhon_module_news.tpl',
-      1 => 1480536263,
+      1 => 1484146629,
       2 => 'file',
     ),
   ),

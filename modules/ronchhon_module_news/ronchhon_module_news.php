@@ -104,7 +104,6 @@ public function __construct()
 				}
 			}
 		}
-		echo 'SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news'.$recherche.$ordre."</br>";
 		$retour_total=$this->bdd->query('SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news'.$recherche.$ordre);
 		$content=$retour_total->fetchAll();
 		if(count($content) == 0){

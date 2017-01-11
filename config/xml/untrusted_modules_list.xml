@@ -1,2 +1,2 @@
 <?xml version="1.0"?>
-<modules_list><modules type="untrusted"><module name="blockreinsurance"/><module name="modulepageacceuil"/><module name="ronchhon_module_news"/><module name="trackingfront"/></modules></modules_list>
+<modules_list><modules type="untrusted"><module name="blockreinsurance"/><module name="modulepageacceuil"/><module name="ronchhon_module_acceuil"/><module name="ronchhon_module_galerie"/><module name="ronchhon_module_news"/><module name="trackingfront"/></modules></modules_list>
