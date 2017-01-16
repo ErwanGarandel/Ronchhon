@@ -316,6 +316,10 @@ public function __construct()
 		
 			$chg=$this->bdd->prepare('delete from ron_genre_news where genre_news_id = '.Tools::getValue('genre_news_id'));
 			$chg->execute();
+			$chg=$this->bdd->prepare('update ron_news set genre_news_id = :id where genre_news_id = '.Tools::getValue('genre_news_id'));
+			$chg->execute(array(
+				':id' => 'null'
+			));
 			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 		
 		}
