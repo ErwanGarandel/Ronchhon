@@ -48,9 +48,9 @@ public function __construct()
 		$tab->add();
 		
 		return (parent::install()
-				&& Configuration::updateValue('ronchhon_module_galerie', ''));
+				&& Configuration::updateValue('ronchhon_module_galerie', '')
 				//&& $this->registerHook('displayHome')
-				//&& $this->registerHook('displayArchive'));
+				&& $this->registerHook('displayArchive'));
 	}
 	public function uninstall(){
 		Configuration::deleteByName('jsvalue');
@@ -219,6 +219,11 @@ private function resize($extension,$nomImage,$id){
 		}
 	}
 	
+	private function liensNavigation($id){
+		return "<div style=\"text-align:center;width:80%;margin:auto;\" id=\"".$id."\">
+		<a style=\"display:inline-block;width:50%\" href=\"#genreOeuvre\">Genre Oeuvre</a><a style=\"display:inline-block;width:50%\" href=\"#oeuvre\">Liste des Oeuvres</a></div>";
+	}
+	
 	private function soumissionFormulaireGenreOeuvre($operation){
 		
 		$genre_oeuvre_id = strval(Tools::getValue('genre_oeuvre_id'));
@@ -332,6 +337,63 @@ private function resize($extension,$nomImage,$id){
 		}
 	}
 	
+	private function traitementRecherche($colonne, $valeur){
+		if(preg_match("#^ronchhon_module_galerieFilter_g#",$colonne)){
+				if(!empty($_POST[$colonne])){
+					$colValeur = substr($colonne,30);
+					switch($colValeur){
+						case 'gal_id':
+							$valCherche = htmlentities($valeur);
+							$valCherche = str_replace('\'','\'\'',$valCherche);
+							$recherche = " ".$colValeur."='".$valCherche."' ";
+							return $recherche;
+							break;
+						case 'gal_nom':
+							$valCherche = htmlentities($valeur);
+							$valCherche = str_replace('\'','\'\'',$valCherche);
+							$valCherche = strtoupper($valCherche);
+							$recherche = " ".$colValeur." LIKE '%".$valCherche."%' ";
+							return $recherche;
+							break;
+						case 'gal_date_r':
+							$x = false;
+							if(!empty($valeur[0])){
+								$date = explode('-',$valeur[0]);
+								$valCherche = $date[2]."/".$date[1]."/".$date[0];
+								$recherche = " ".$colValeur." > str_to_date('".$valCherche."','%d/%m/%Y')";
+								$x = true;
+							}
+							if(!empty($valeur[1])){
+								if($x){
+									$recherche .= " and ";
+								}
+								$date = explode('-',$valeur[1]);
+								$valCherche = $date[2]."/".$date[1]."/".$date[0];
+								$recherche .= " ".$colValeur." < str_to_date('".$valCherche."','%d/%m/%Y')";
+							}
+							return $recherche;
+							break;
+						case 'genre_oeuvre_libelle':
+							$valCherche = htmlentities($valeur);
+							$valCherche = str_replace('\'','\'\'',$valCherche);
+							$valCherche = strtoupper($valCherche);
+							$recherche = " ".$colValeur." LIKE '%".$valCherche."%' ";
+							return $recherche;
+							break;
+						case 'gal_format':
+							$valCherche = htmlentities($valeur);
+							$valCherche = str_replace('\'','\'\'',$valCherche);
+							$valCherche = strtoupper($valCherche);
+							$recherche = " ".$colValeur." LIKE '%".$valCherche."%' ";
+							return $recherche;
+							break;
+						default:
+							break;
+					}
+				}
+		}
+	}
+	
 	public function getContent(){
 		$output = null;
 		
@@ -393,11 +455,11 @@ private function resize($extension,$nomImage,$id){
 			}
 		}
 		
-		/*if(Tools::isSubmit('submitReset'.$this->name)){
+		if(Tools::isSubmit('submitReset'.$this->name)){
 			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
-		}*/
+		}
 		
-		return $output.$this->listeGalerie().$this->listeGenreOeuvre();
+		return $this->liensNavigation("oeuvre").$output.$this->listeGalerie().$this->liensNavigation("genreOeuvre").$this->listeGenreOeuvre();
 	}
 	
 	private function listeGalerie(){
@@ -476,11 +538,13 @@ private function resize($extension,$nomImage,$id){
             'title' => 'Identifiant du genre',
             'width' => 'auto',
             'type' => 'text',
+			'search' => false,
         ),
         'genre_oeuvre_libelle' => array(
             'title' => 'Libelle du genre',
             'width' => 'auto',
             'type' => 'text',
+			'search' => false,
         )
     );
     $helper = new HelperList();
@@ -512,8 +576,29 @@ private function resize($extension,$nomImage,$id){
 }
 	
 	public function listeOeuvreGalerie(){
-		$resRequete = $this->bdd->query('Select gal_id, genre_oeuvre_libelle, gal_nom, gal_description, gal_date_r, gal_format, CONCAT(\'<img src="../ronchhon/galerie/mini\',gal_id,\'.\',gal_format,\'">\') as \'image\' from ron_galerie left join ron_genre_oeuvre using(genre_oeuvre_id)');
+		$ordre = ''; $recherche = ''; $conditions = false;
+		if(Tools::isSubmit('ronchhon_module_galerieOrderby') && Tools::isSubmit('ronchhon_module_galerieOrderway')){
+			$ordre = ' order by '.Tools::getValue('ronchhon_module_galerieOrderby').' '.Tools::getValue('ronchhon_module_galerieOrderway');
+		}
+		if(Tools::isSubmit('submitFilter')){
+			foreach($_POST as $cle=>$value){
+				$rechercheTemp = $this->traitementRecherche($cle, $value);
+				if(!empty($rechercheTemp) && $conditions){
+					$recherche.= " and ".$rechercheTemp;
+				}
+				else if(!empty($rechercheTemp) && !$conditions){
+					$conditions = true;
+					$recherche.= " where ".$rechercheTemp;
+				}
+			}
+		}
+		$resRequete = $this->bdd->query('Select gal_id, genre_oeuvre_libelle, gal_nom, gal_description, gal_date_r, gal_format, CONCAT(\'<img src="../ronchhon/galerie/mini\',gal_id,\'.\',gal_format,\'">\') as \'image\' from ron_galerie left join ron_genre_oeuvre using(genre_oeuvre_id) '.$recherche.$ordre);
 		$listeOeuvre = $resRequete->fetchAll();
+		if(count($content) == 0){
+			$retour_total=$this->bdd->query('SELECT news_id, news_titre, news_contenu, news_date_p, news_date_m FROM ron_news');
+			$content=$retour_total->fetchAll();
+			$this->displayError("Probleme");
+		}
 		return $listeOeuvre;
 	}
 	
@@ -732,6 +817,36 @@ private function resize($extension,$nomImage,$id){
 		$resRequete = $this->bdd->query('Select max(genre_oeuvre_id) as MAX from ron_genre_oeuvre');
 		$max = $resRequete->fetch(PDO::FETCH_ASSOC);
 		return $max['MAX']+1;
+	}
+	
+	public function hookDisplayArchive($params)
+    {
+		if(Tools::getValue('id_cms') == 8){
+					if (!$this->isCached('ronchhon_module_galerie.tpl', $this->getCacheId()))
+	{	
+		global $smarty;
+		$smarty->assign(array(
+			'ronchhon_module_galerie' => Configuration::get('ronchhon_module_galerie')
+		));
+		//lancement de smmarty
+		
+		$query = $this->bdd->prepare("SELECT * FROM ron_galerie left join ron_genre_oeuvre using(genre_oeuvre_id)");
+		$query->execute();
+		$list_oeuvre = array();
+		$i = 0;
+		while($data = $query->fetch()){
+					$list_oeuvre[$i]['id'] = $data['GAL_ID'];
+					$list_oeuvre[$i]['nom'] = $data['GAL_NOM'];
+					$list_oeuvre[$i]['desc'] = $data['GAL_DESCRIPTION'];
+					$list_oeuvre[$i]['format'] = $data['GAL_FORMAT'];
+					$list_oeuvre[$i]['libelle'] = $data['GENRE_OEUVRE_LIBELLE'];
+					$i++;
+		}
+
+		$smarty->assign('list_oeuvre', $list_oeuvre);
+					}
+		return $this->display(__FILE__, 'ronchhon_module_galerie.tpl', $this->getCacheId());
+				}
 	}
 	
 	}

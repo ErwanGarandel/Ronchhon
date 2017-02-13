@@ -177,9 +177,9 @@ public function __construct()
 	
 	private function getListContentGenreNews(){			//retourne les données contenues dans la base concernant les genres de news uniquement
 		$ordre = '';
-		if(Tools::isSubmit('ronchhon_module_newsOrderby') && Tools::isSubmit('ronchhon_module_newsOrderway') && substr(Tools::getValue('ronchhon_module_newsOrderby'),0,1) == 'g'){
+		/*if(Tools::isSubmit('ronchhon_module_newsOrderby') && Tools::isSubmit('ronchhon_module_newsOrderway') && substr(Tools::getValue('ronchhon_module_newsOrderby'),0,1) == 'g'){
 			$ordre = ' order by '.Tools::getValue('ronchhon_module_newsOrderby').' '.Tools::getValue('ronchhon_module_newsOrderway');
-		}
+		}*/
 		$retour_total=$this->bdd->query('SELECT genre_news_id, genre_news_libelle FROM ron_genre_news'.$ordre);
 		$content=$retour_total->fetchAll(PDO::FETCH_ASSOC);
 		return $content;
@@ -345,11 +345,19 @@ public function __construct()
 			else{ return $output.$this->displayFormGenreNews();}
 		}
 		else{
+			if(Tools::isSubmit('submitReset'.$this->name)){
+				Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+			}
 			if(Tools::isSubmit('error')){
 				$output.= $this->displayError($this->l(Tools::getValue('error')));
 			}
-			return $output.$this->initList().$output.$this->listeGenreNews();
+			return $this->liensNavigation("news").$output.$this->initList().$this->liensNavigation("genreNews").$output.$this->listeGenreNews();
 		}
+	}
+	
+	private function liensNavigation($id){
+		return "<div style=\"text-align:center;width:80%;margin:auto;\" id=\"".$id."\">
+		<a style=\"display:inline-block;width:50%\" href=\"#genreNews\">Genre News</a><a style=\"display:inline-block;width:50%\" href=\"#news\">Liste des News</a></div>";
 	}
 	
 	private function initList(){
@@ -415,11 +423,13 @@ public function __construct()
             'title' => 'Identifiant',
             'width' => 'auto',
             'type' => 'text',
+			'search' => false,
         ),
         'genre_news_libelle' => array(
             'title' => 'Libellé du genre',
             'width' => 'auto',
             'type' => 'text',
+			'search' => false,
         )
     );
     $helper = new HelperList();

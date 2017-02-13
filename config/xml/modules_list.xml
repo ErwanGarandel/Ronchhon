@@ -119,9 +119,11 @@
 		<module name="apiway"/>
 		<module name="authorizenet"/>
 		<module name="avalaratax"/>
+		<module name="bablic"/>
 		<module name="bluesnap"/>
 		<module name="bpostshm"/>
 		<module name="brainify"/>
+		<module name="cartsguru"/>
 		<module name="chronopost"/>
 		<module name="correos"/>
 		<module name="cubyn"/>
@@ -150,6 +152,7 @@
 		<module name="lowcostexpress"/>
 		<module name="magnalister"/>
 		<module name="mercadopagobr"/>
+		<module name="miwo"/>
 		<module name="mobfirst"/>
 		<module name="mondialrelay"/>
 		<module name="moneybookers"/>
@@ -168,11 +171,14 @@
 		<module name="payplug"/>
 		<module name="payulatam"/>
 		<module name="pilipay"/>
+		<module name="prestashoptoquickbooks"/>
 		<module name="protectedshops"/>
 		<module name="psphipay"/>
 		<module name="pudo"/>
 		<module name="realexredirect"/>
+		<module name="rees46"/>
 		<module name="reforestaction"/>
+		<module name="salesmanago"/>
 		<module name="selldorado"/>
 		<module name="sendcloud"/>
 		<module name="sendinblue"/>
