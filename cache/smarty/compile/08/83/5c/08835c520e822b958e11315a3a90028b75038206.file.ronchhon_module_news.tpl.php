@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2017-01-18 22:15:54
+<?php /* Smarty version Smarty-3.1.19, created on 2017-02-16 13:32:19
          compiled from "C:\xampp\htdocs\websites\prestashop\modules\ronchhon_module_news\ronchhon_module_news.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:8846580784998aa163-20434525%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:2936858a59bd34acf20-45629438%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,20 +11,20 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '8846580784998aa163-20434525',
+  'nocache_hash' => '2936858a59bd34acf20-45629438',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_580784998b6f80_45660997',
   'variables' => 
   array (
     'list_news' => 0,
     'news' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.19',
+  'unifunc' => 'content_58a59bd34ba795_02931042',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_580784998b6f80_45660997')) {function content_580784998b6f80_45660997($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include 'C:\\xampp\\htdocs\\websites\\prestashop\\tools\\smarty\\plugins\\modifier.date_format.php';
+<?php if ($_valid && !is_callable('content_58a59bd34ba795_02931042')) {function content_58a59bd34ba795_02931042($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include 'C:\\xampp\\htdocs\\websites\\prestashop\\tools\\smarty\\plugins\\modifier.date_format.php';
 ?><style type="text/css">
 
 /* this is an intersting idea for this section */

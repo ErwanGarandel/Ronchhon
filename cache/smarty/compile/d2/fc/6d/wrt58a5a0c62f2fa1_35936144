@@ -1,0 +1,24 @@
+<?php /* Smarty version Smarty-3.1.19, created on 2017-02-16 13:53:26
+         compiled from "C:\xampp\htdocs\websites\prestashop\modules\ronchhon_module_acceuil\ronchhon_module_acceuil.tpl" */ ?>
+<?php /*%%SmartyHeaderCode:1973358a5a0c62e9657-41624398%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    'd2fc6dc183aff24de7980f675cae58ed05a0aaa1' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\websites\\prestashop\\modules\\ronchhon_module_acceuil\\ronchhon_module_acceuil.tpl',
+      1 => 1484141010,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '1973358a5a0c62e9657-41624398',
+  'function' => 
+  array (
+  ),
+  'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.19',
+  'unifunc' => 'content_58a5a0c62f10a6_94736181',
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_58a5a0c62f10a6_94736181')) {function content_58a5a0c62f10a6_94736181($_smarty_tpl) {?><div class="scrollblock">
+</div>
+<?php }} ?>
