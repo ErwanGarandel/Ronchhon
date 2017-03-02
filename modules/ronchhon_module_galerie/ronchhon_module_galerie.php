@@ -70,7 +70,7 @@ public function __construct()
 	
 	public function connexionBase(){			//Ouverture de connexion à la base 'ronchhon' via PDO
 		try{
-			$bdd = new PDO('mysql:host=localhost;dbname=ronchhon;charset=utf8', 'root', '', array(PDO::ATTR_ERRMODE =>PDO::ERRMODE_EXCEPTION));
+			$bdd = new PDO('mysql:host=localhost;dbname=ronchhon;charset=utf8', 'root', 'vs4d8tm5', array(PDO::ATTR_ERRMODE =>PDO::ERRMODE_EXCEPTION));
 		}
 		catch(Exception $e){
 			die('Erreur : '.$e->getMessage());
@@ -651,7 +651,6 @@ private function resize($extension,$nomImage,$id){
 				array(
 					'type' => 'select',
 					'label' => 'Genre de l\'oeuvre',
-					'required' => true,
 					'name' => 'gal_genre',
 					'options' => array(
 						'query' => array(),
@@ -830,20 +829,36 @@ private function resize($extension,$nomImage,$id){
 		));
 		//lancement de smmarty
 		
+		$genre_oeuvres = $this->listeGenreOeuvreGalerie();
+		
 		$query = $this->bdd->prepare("SELECT * FROM ron_galerie left join ron_genre_oeuvre using(genre_oeuvre_id)");
 		$query->execute();
 		$list_oeuvre = array();
 		$i = 0;
+		
 		while($data = $query->fetch()){
+			if(Tools::isSubmit('genre')){
+				if(Tools::getValue('genre') == $data['GENRE_OEUVRE_ID']){
 					$list_oeuvre[$i]['id'] = $data['GAL_ID'];
 					$list_oeuvre[$i]['nom'] = $data['GAL_NOM'];
 					$list_oeuvre[$i]['desc'] = $data['GAL_DESCRIPTION'];
 					$list_oeuvre[$i]['format'] = $data['GAL_FORMAT'];
 					$list_oeuvre[$i]['libelle'] = $data['GENRE_OEUVRE_LIBELLE'];
 					$i++;
+				}
+			}
+			else{
+				$list_oeuvre[$i]['id'] = $data['GAL_ID'];
+				$list_oeuvre[$i]['nom'] = $data['GAL_NOM'];
+				$list_oeuvre[$i]['desc'] = $data['GAL_DESCRIPTION'];
+				$list_oeuvre[$i]['format'] = $data['GAL_FORMAT'];
+				$list_oeuvre[$i]['libelle'] = $data['GENRE_OEUVRE_LIBELLE'];
+				$i++;
+			}
 		}
 
 		$smarty->assign('list_oeuvre', $list_oeuvre);
+		$smarty->assign('genre_oeuvre', $genre_oeuvres);
 					}
 		return $this->display(__FILE__, 'ronchhon_module_galerie.tpl', $this->getCacheId());
 				}

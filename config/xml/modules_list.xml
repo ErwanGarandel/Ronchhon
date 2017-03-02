@@ -124,10 +124,12 @@
 		<module name="bpostshm"/>
 		<module name="brainify"/>
 		<module name="cartsguru"/>
+		<module name="chargeback"/>
 		<module name="chronopost"/>
 		<module name="correos"/>
 		<module name="cubyn"/>
 		<module name="desjardins"/>
+		<module name="digitaleo"/>
 		<module name="dotpay"/>
 		<module name="dpdfrance"/>
 		<module name="easymarketing"/>
@@ -195,6 +197,7 @@
 		<module name="stripe_official"/>
 		<module name="themoneytizer"/>
 		<module name="trustedshops"/>
+		<module name="trustedshopsintegration"/>
 		<module name="twenga"/>
 		<module name="wirecardceecheckoutseamless"/>
 		<module name="worldpay"/>

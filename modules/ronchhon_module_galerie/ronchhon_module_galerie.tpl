@@ -1,12 +1,20 @@
 <div class="ronchhon_module_galerie">
-	<div id="cadreZoom"><span id="numero"></span>
+	<div id="cadreZoom"><span id="numero"></span><span id="taille">0</span>
 		<p id="titreZoom"></p>
 		<img id="croixFerme" onclick="ferme()" src="./ronchhon/croix.png"/>
-		<img id="imageZoom" src=""/>
+		<img id="imageZoom" style="max-width: 80%;max-height: 80%;" onclick="realSize()" src=""/>
 		<p id="descZoom" ></p>
 		<p onclick="precedant()">Précédant</p><p onclick="suivant()">Suivant</p>
 	</div>
 	<p>La galerie</p>
+<div id="cadreMenu">
+	<ul id="listeMenu">
+	<li><a href="{$smarty.server.PHP_SELF}?id_cms=8&controller=cms">Toutes les oeuvres</a></li>
+	{foreach from=$genre_oeuvre item=genre}
+		<li><a href="{$smarty.server.PHP_SELF}?id_cms=8&controller=cms&genre={$genre.genre_oeuvre_id}">{$genre.genre_oeuvre_libelle}</a></li>
+	{/foreach}
+	</ul>
+</div>
 	{foreach from=$list_oeuvre item=oeuvre}
 	{if $oeuvre@iteration % 4 eq 1}
 	<div style="clean:both;height:300px;width:100%;margin:auto;text-align:center">{/if}
@@ -25,6 +33,7 @@
 		var titre = document.getElementById("titreZoom");
 		var desc = document.getElementById("descZoom");
 		var id = document.getElementById("numero");
+		var taille = document.getElementById("taille");
 		
 		cadre.style.width = "100%";
 		cadre.style.height = "100%";
@@ -39,6 +48,8 @@
 		desc.innerHTML = oeuvre[identifiant-1].desc;
 		
 		id.innerHTML = identifiant;
+		
+		taille.innerHTML = "0";
 		
 		document.body.style.overflow = "hidden";
 	}
@@ -57,12 +68,39 @@
 		}
 	}
 	
+	function realSize(){
+		var taille = document.getElementById("taille");
+		var image = document.getElementById("imageZoom");
+		
+		if(taille.innerHTML == 0){
+			taille.innerHTML = 1;
+			
+			var imgTmp = new Image();
+			imgTmp.src = image.src;
+			largeurImg = imgTmp.width
+			hauteurImg = imgTmp.height
+			
+			image.style.width = largeurImg+"px";
+			image.style.height = hauteurImg+"px";
+			image.style.maxWidth = "";
+			image.style.maxHeight = "";
+		}
+		else{
+			taille.innerHTML = 0;
+			image.style.width = "auto";
+			image.style.height = "auto";
+			image.style.maxWidth = "80%";
+			image.style.maxHeight = "80%";
+		}
+	}
+	
 	function ferme(){
 		var cadre = document.getElementById("cadreZoom");
 		var image = document.getElementById("imageZoom");
 		var titre = document.getElementById("titreZoom");
 		var desc = document.getElementById("descZoom");
 		var id = document.getElementById("numero");
+		var taille = document.getElementById("taille");
 		
 		cadre.style.width = "0";
 		cadre.style.height = "0";
@@ -77,6 +115,12 @@
 		desc.innerHTML = "";
 		
 		id.innerHTML = "";
+		
+		taille.innerHTML = 0;
+		image.style.width = "auto";
+		image.style.height = "auto";
+		image.style.maxWidth = "80%";
+		image.style.maxHeight = "80%";
 		
 		document.body.style.overflow = "auto";
 	}
